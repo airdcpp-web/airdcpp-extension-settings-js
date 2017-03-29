@@ -2,11 +2,11 @@
 
 Settings management module for AirDC++ JavaScript extensions.
 
-See the [airdcpp-create-extension](https://github.com/airdcpp-web/airdcpp-create-extension) starter project for an actual usage example.
+See the [example extensions](https://github.com/airdcpp-web/airdcpp-extension-js/tree/master/examples) and the [airdcpp-create-extension](https://github.com/airdcpp-web/airdcpp-create-extension) starter project for actual usage examples.
 
 ## Features
 
-- Keeping the config data in sync with the application
+- Keeping the config data in sync with the API
 - Loading and saving of settings on disk 
 - Versioning and data migrations
 
@@ -57,14 +57,22 @@ const migrate = (loadedConfigVersion, loadedData) => {
     throw `Migration for settings version ${loadedConfigVersion} is not supported`;
   }
 
-  let migratedData;
-
-  // Convert data
   if (loadedConfigVersion === 2) {
-    // (do the conversions)
+    // Perform the required conversions
+    return Object.keys(loadedData).reduce((reduced, key) => {
+      if (key === 'message_type' && loadedData[key] === 'private') {
+        // The value 'private' has been renamed to 'private_chat'
+        reduced[key] = 'private_chat';
+      } else {
+        reduced[key] = loadedData[key];
+      }
+
+      return reduced;
+    }, {})
   }
 
-  return migratedData;
+  // Return as it is
+  return loadedData;
 };
 
 // Load
@@ -114,5 +122,5 @@ try {
 [build-badge]: https://img.shields.io/travis/airdcpp-web/airdcpp-extension-settings-js/master.svg?style=flat-square
 [build]: https://travis-ci.org/airdcpp-web/airdcpp-extension-settings-js
 
-[npm-badge]: https://img.shields.io/npm/v/airdcpp-extension-settings-js.svg?style=flat-square
-[npm]: https://www.npmjs.org/package/airdcpp-extension-settings-js
+[npm-badge]: https://img.shields.io/npm/v/airdcpp-extension-settings.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/airdcpp-extension-settings
