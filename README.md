@@ -119,6 +119,24 @@ try {
 }
 ```
 
+### `onValuesUpdated`
+
+`onValuesUpdated(callback)`
+
+Set listener for updated setting values.
+
+The callback function will receive the updated settings value object (`settingKey` -> `newValue`) an argument (it won't contain unchanged values). The listener will also be fired during initial loading with all loaded settings.
+
+**Usage example**
+
+```js
+settings.onValuesUpdated = updatedValues => {
+	if (updatedValues.hasOwnProperty('search_interval')) {
+		resetSearchInterval();
+	}
+};
+```
+
 [build-badge]: https://img.shields.io/travis/airdcpp-web/airdcpp-extension-settings-js/master.svg?style=flat-square
 [build]: https://travis-ci.org/airdcpp-web/airdcpp-extension-settings-js
 

@@ -6,6 +6,7 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 	invariant(configVersion, 'Settings version should be a positive integer');
 	invariant(Array.isArray(definitions), 'Setting definitions should be an array');
 	let settings;
+	let valuesUpdatedCallback;
 
 	// Handler for API event for updated settings
 	const onSettingsUpdated = (updatedValues) => {
@@ -13,6 +14,10 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 			...settings,
 			...updatedValues
 		};
+
+		if (valuesUpdatedCallback) {
+			valuesUpdatedCallback(updatedValues);
+		}
 
 		socket.logger.verbose(`Writing settings to ${configFile}...`);
 
@@ -67,6 +72,10 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 		// App will apply possible default values, ensure that everything is in sync
 		settings = await socket.get(`extensions/${extensionName}/settings`);
 
+		if (valuesUpdatedCallback) {
+			valuesUpdatedCallback(settings);
+		}
+
 		// Listen for updated setting values
 		socket.addListener('extensions', 'extension_settings_updated', onSettingsUpdated, extensionName);
 	}
@@ -105,6 +114,9 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 	return {
 		getValue,
 		setValue,
-		load
+		load,
+		set onValuesUpdated(handler) {
+			valuesUpdatedCallback = handler;
+		},
 	};
 };
