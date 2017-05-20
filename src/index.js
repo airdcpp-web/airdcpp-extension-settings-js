@@ -72,10 +72,6 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 		// App will apply possible default values, ensure that everything is in sync
 		settings = await socket.get(`extensions/${extensionName}/settings`);
 
-		if (valuesUpdatedCallback) {
-			valuesUpdatedCallback(settings);
-		}
-
 		// Listen for updated setting values
 		socket.addListener('extensions', 'extension_settings_updated', onSettingsUpdated, extensionName);
 	}
@@ -108,6 +104,10 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 			await registerApi(settingsLoaded);
 		} catch (err) {
 			socket.logger.error('Failed to register settings: ' + err.message)
+		}
+
+		if (valuesUpdatedCallback) {
+			valuesUpdatedCallback(settings);
 		}
 	};
 
