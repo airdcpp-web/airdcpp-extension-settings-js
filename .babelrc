@@ -1,13 +1,17 @@
 {
-  "presets": [ "es2015", "stage-1" ],
-  "plugins": [
-    "transform-async-to-generator",
-    "transform-object-assign",
-    "syntax-async-functions",
-    "transform-regenerator",
-    ["transform-runtime", {
-      "polyfill": true,
-      "regenerator": true,
+  "presets": [ 
+    ["@babel/env", {
+      "targets": {
+        "node": "0.10"
+      }
     }]
-  ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-async-to-generator",
+    "@babel/plugin-transform-object-assign",
+    ["@babel/plugin-transform-runtime", {
+      "regenerator": true
+    }]
+  ],
+  "sourceType": "unambiguous"
 }
