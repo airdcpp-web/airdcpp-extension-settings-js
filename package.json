@@ -1,12 +1,12 @@
 {
   "name": "airdcpp-extension-settings",
-  "version": "1.0.2",
+  "version": "1.1.0-beta.1",
   "description": "Settings management library for AirDC++ JavaScript extensions",
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && cross-env NODE_ENV=production babel ./src -d dist",
     "clean": "rimraf dist/*",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -17,24 +17,29 @@
     "airdcpp",
     "airdcpp-extensions"
   ],
-  "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-transform-async-to-generator": "^7.1.0",
-    "@babel/plugin-transform-object-assign": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/runtime": "^7.1.2",
-    "cross-env": "^5.0.1",
-    "rimraf": "^2.5.2"
+  "dependencies": {
+    "@babel/runtime": "^7.4.2",
+    "invariant": "^2.2.4"
   },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-transform-async-to-generator": "^7.4.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "cross-env": "^5.0.1",
+    "jest": "^24.5.0",
+    "jest-cli": "^24.5.0",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^2.6.3"
+  },
+  "pre-commit": [
+    "test"
+  ],
   "author": "maksis",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/airdcpp-web/airdcpp-extension-settings-js/issues"
   },
-  "homepage": "https://github.com/airdcpp-web/airdcpp-extension-settings-js#readme",
-  "dependencies": {
-    "invariant": "^2.2.4"
-  }
+  "homepage": "https://github.com/airdcpp-web/airdcpp-extension-settings-js#readme"
 }

@@ -1,10 +1,25 @@
-const fs = require('fs');
 const invariant = require('invariant');
 
 
-module.exports = function (socket, { extensionName, configFile, configVersion, definitions }) {
+const DefaultAPIHandler = (socket, extensionName) => ({
+	postDefinitions: definitions => socket.post(`extensions/${extensionName}/settings/definitions`, definitions),
+	getSettings: () => socket.get(`extensions/${extensionName}/settings`),
+	updateSettings: settings => socket.patch(`extensions/${extensionName}/settings`, settings),
+	addSettingUpdateListener: callback => socket.addListener('extensions', 'extension_settings_updated', callback, extensionName)
+});
+
+module.exports = function (
+	socket, 
+	extension,
+	fs = require('fs'),
+	apiHandler = DefaultAPIHandler
+) {
+	const { extensionName, configFile, configVersion, definitions } = extension;
 	invariant(configVersion, 'Settings version should be a positive integer');
 	invariant(Array.isArray(definitions), 'Setting definitions should be an array');
+
+	const API = apiHandler(socket, extensionName);
+	
 	let settings;
 	let valuesUpdatedCallback;
 
@@ -45,15 +60,15 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 	// Update a single setting value
 	const setValue = (key, value) => {
 		invariant(hasDefinition(key), `Definition for key ${key} was not found`);
-		return socket.patch(`extensions/${extensionName}/settings`, {
+		return API.updateSettings({
 			[key]: value,
 		})
 	};
 
-	// Initialize settings API4
+	// Initialize settings API
 	const registerApi = async (settingsLoaded) => {
 		// Send definitions
-		await socket.post(`extensions/${extensionName}/settings/definitions`, definitions);
+		await API.postDefinitions(definitions);
 
 		if (settingsLoaded) {
 			// Remove possible obsolete settings that were loaded (those would cause an error with the API)
@@ -66,14 +81,14 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 			}, {});
 
 			// Send the loaded settings
-			await socket.patch(`extensions/${extensionName}/settings`, filteredSettings);
+			await API.updateSettings(filteredSettings);
 		}
 
 		// App will apply possible default values, ensure that everything is in sync
-		settings = await socket.get(`extensions/${extensionName}/settings`);
+		settings = await API.getSettings();
 
 		// Listen for updated setting values
-		socket.addListener('extensions', 'extension_settings_updated', onSettingsUpdated, extensionName);
+		API.addSettingUpdateListener(onSettingsUpdated);
 	}
 
 	const load = async (convertHandler) => {
@@ -118,5 +133,8 @@ module.exports = function (socket, { extensionName, configFile, configVersion, d
 		set onValuesUpdated(handler) {
 			valuesUpdatedCallback = handler;
 		},
+		getValues: () => ({
+			...settings
+		})
 	};
 };
