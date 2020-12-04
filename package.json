@@ -38,6 +38,15 @@
   "pre-commit": [
     "test"
   ],
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "coveragePathIgnorePatterns": [
+      "/dist/",
+      "/node_modules/",
+      "/src/test-data/"
+    ],
+    "collectCoverage": true
+  },
   "author": "maksis",
   "license": "MIT",
   "bugs": {

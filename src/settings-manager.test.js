@@ -108,24 +108,23 @@ describe('settings', () => {
   describe('update', () => {
     test('should update setting value', async () => {
       // MOCKS
-      let updateHandler;
+      let updateListener;
 
-      const updateCallback = jest.fn((settings) => {
-        if (!!updateHandler) {
-          updateHandler(settings);
+      const updateValuesCallback = jest.fn((settings) => {
+        if (!!updateListener) {
+          // Simulate API listener event for the updated values
+          updateListener(settings);
         }
       });
 
       const addUpdateListenerCallback = jest.fn(callback => {
-        updateHandler = callback;
+        updateListener = callback;
       });
 
       const api = getMockAPI({
-        updateSettings: updateCallback,
+        updateSettings: updateValuesCallback,
         addSettingUpdateListener: addUpdateListenerCallback,
       });
-
-      // const socket = getSocket()
 
       const writeFileCallback = jest.fn();
 
@@ -148,11 +147,13 @@ describe('settings', () => {
         }
       }
 
-      expect(updateHandler).toBeDefined();
+      expect(updateListener).toBeDefined();
       expect(addUpdateListenerCallback).toHaveBeenCalledTimes(1);
-      expect(updateCallback).toHaveBeenCalledTimes(2);
+      expect(updateValuesCallback).toHaveBeenCalledTimes(2);
       expect(writeFileCallback).toHaveBeenCalledWith(MockExtension.configFile, JSON.stringify(newSettingFile), expect.anything());
       expect(settings.getValue('mock_setting1')).toEqual(!MockSettingValues.mock_setting1);
+      expect(settings.getValue('mock_setting2')).toEqual(MockSettingFile.settings.mock_setting2);
+      expect(settings.getValue('mock_setting3')).toEqual(MockSettingValues.mock_setting3);
     });
   });
 });

@@ -1,5 +1,25 @@
 const invariant = require('invariant');
 
+
+// Remove settings that are using the default value
+const filterDefaultValues = (settingValueMap, definitions) => {
+  const nonDefaultValues = Object.keys(settingValueMap).reduce((reduced, key) => {
+    const definition = definitions.find(def => def.key === key);
+    if (!definition) {
+      return reduced;
+    }
+
+    if (settingValueMap[key] === definition.default_value) {
+      return reduced;
+    }
+    
+    reduced[key] = settingValueMap[key];
+    return reduced;
+  }, {});
+
+  return nonDefaultValues;
+}
+
 module.exports = function (
   extension,
   logger,
@@ -27,7 +47,7 @@ module.exports = function (
 
     fs.writeFile(configFile, JSON.stringify({
       version: configVersion,
-      settings,
+      settings: filterDefaultValues(settings, definitions),
     }), err => {
       if (err) {
         logger.error(`Failed to save settings to ${configFile}: ${err}`);

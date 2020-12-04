@@ -6,13 +6,18 @@ const MockExtension = {
   definitions: [
     {
       key: 'mock_setting1',
-      title: 'Mock setting 1',
+      title: 'Mock setting 1 (has default)',
       default_value: true,
       type: 'boolean'
     }, {
       key: 'mock_setting2',
-      title: 'Mock setting 2',
+      title: 'Mock setting 2 (no default, has file value)',
       type: 'string'
+    }, {
+      key: 'mock_setting3',
+      title: 'Mock setting 3 (has default, no changes)',
+      type: 'number',
+      default_value: 1,
     }
   ]
 }
@@ -45,7 +50,8 @@ const MockSettingFile = {
 
 const MockSettingValues = {
   mock_setting1: true,
-  mock_setting2: 'mock value'
+  mock_setting2: 'mock value',
+  mock_setting3: 1
 };
 
 const MockFS = {

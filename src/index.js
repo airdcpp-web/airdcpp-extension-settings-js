@@ -1,5 +1,5 @@
 const invariant = require('invariant');
-const settingsManager = require('settings-manager');
+const settingsManager = require('./settings-manager');
 
 
 const DefaultAPIHandler = (socket, extensionName) => ({
