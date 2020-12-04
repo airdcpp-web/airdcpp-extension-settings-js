@@ -1,72 +1,13 @@
-import SettingsManager from './index';
+const SettingsManager = require('./settings-manager');
+const { MockLogger, MockFS, MockSettingFile, MockSettingValues, MockExtension } = require('./test-data/mocks');
 
 
-const Extension = {
-  extensionName: 'airdcpp-test', 
-  configFile: 'MOCK_CONFIG_FILE', 
-  configVersion: 1, 
-  definitions: [
-    {
-      key: 'mock_setting1',
-      title: 'Mock setting 1',
-      default_value: true,
-      type: 'boolean'
-    }, {
-      key: 'mock_setting2',
-      title: 'Mock setting 2',
-      type: 'string'
-    }
-  ]
-}
-
-const MockLogger = {
-  verbose: jest.fn((a1, a2, a3, a4) => {
-    //console.log(a1, a2, a3, a4);
-  }),
-  log: jest.fn((a1, a2, a3, a4) => {
-    //console.log(a1, a2, a3, a4);
-  }),
-  info: jest.fn((a1, a2, a3, a4) => {
-    //console.info(a1, a2, a3, a4);
-  }),
-  warn: jest.fn((a1, a2, a3, a4) => {
-    console.warn(a1, a2, a3, a4);
-  }),
-  error: jest.fn((a1, a2, a3, a4) => {
-    console.error(a1, a2, a3, a4);
-  }),
-};
-
-
-const MockSettingFile = {
-  version: Extension.configVersion,
-  settings: {
-    mock_setting2: 'mock value'
-  }
-};
-
-const MockSettingValues = {
-  mock_setting1: true,
-  mock_setting2: 'mock value'
-};
-
-const MockFS = {
-  readFileSync: jest.fn(() => {
-    return JSON.stringify(MockSettingFile, null, 2);
-  })
-}
-
-const getAPIHandler = overrides => () => ({
+const getMockAPI = overrides => ({
   postDefinitions: jest.fn(),
   getSettings: jest.fn(() => MockSettingValues),
   updateSettings: jest.fn(),
   addSettingUpdateListener: jest.fn(),
   ...overrides
-});
-
-const getSocket = (/*addListener = jest.fn()*/) => ({
-  logger: MockLogger,
-  //addListener
 });
 
 describe('settings', () => {
@@ -82,21 +23,19 @@ describe('settings', () => {
       const mockAddListenerCallback = jest.fn();
       const mockMigrateCallback = jest.fn();
 
-      const APIHandler = () => ({
+      const api = {
         postDefinitions: mockDefinitionsCallback,
         getSettings: mockGetValuesCallback,
         updateSettings: mockUpdateSettingsCallback,
         addSettingUpdateListener: mockAddListenerCallback,
-      });
-
-      const socket = getSocket();
+      };
 
       // RUN
-      const settings = SettingsManager(socket, Extension, MockFS, APIHandler);
+      const settings = SettingsManager(MockExtension, MockLogger, MockFS, api);
       await settings.load(mockMigrateCallback);
 
       // CHECKS
-      expect(mockDefinitionsCallback).toHaveBeenCalledWith(Extension.definitions);
+      expect(mockDefinitionsCallback).toHaveBeenCalledWith(MockExtension.definitions);
       expect(mockGetValuesCallback).toHaveBeenCalled();
       expect(mockAddListenerCallback).toHaveBeenCalled();
       expect(mockMigrateCallback).toHaveBeenCalledTimes(0);
@@ -112,12 +51,10 @@ describe('settings', () => {
         })
       }
 
-      const APIHandler = getAPIHandler();
-      
-      const socket = getSocket();
+      const api = getMockAPI();
 
       // RUN
-      const settings = SettingsManager(socket, Extension, MockFSThrow, APIHandler);
+      const settings = SettingsManager(MockExtension, MockLogger, MockFSThrow, api);
       await settings.load();
 
       // CHECKS
@@ -142,20 +79,18 @@ describe('settings', () => {
 
       const mockUpdateSettingsCallback = jest.fn();
 
-      const APIHandler = getAPIHandler({
+      const api = getMockAPI({
         getSettings: () => mockNewSettingsValues,
         updateSettings: mockUpdateSettingsCallback,
       });
 
-      const socket = getSocket();
-
       const UpdatedExtension = {
-        ...Extension,
-        configVersion: Extension.configVersion + 1,
+        ...MockExtension,
+        configVersion: MockExtension.configVersion + 1,
       };
 
       // RUN
-      const settings = SettingsManager(socket, UpdatedExtension, MockFS, APIHandler);
+      const settings = SettingsManager(UpdatedExtension, MockLogger, MockFS, api);
       await settings.load(migrateCallback);
 
       // CHECKS
@@ -185,12 +120,12 @@ describe('settings', () => {
         updateHandler = callback;
       });
 
-      const APIHandler = getAPIHandler({
+      const api = getMockAPI({
         updateSettings: updateCallback,
         addSettingUpdateListener: addUpdateListenerCallback,
       });
 
-      const socket = getSocket()
+      // const socket = getSocket()
 
       const writeFileCallback = jest.fn();
 
@@ -200,7 +135,7 @@ describe('settings', () => {
       }
 
       // RUN
-      const settings = SettingsManager(socket, Extension, MockFSWrite, APIHandler);
+      const settings = SettingsManager(MockExtension, MockLogger, MockFSWrite, api);
       await settings.load();
       settings.setValue('mock_setting1', !MockSettingValues.mock_setting1);
 
@@ -216,7 +151,7 @@ describe('settings', () => {
       expect(updateHandler).toBeDefined();
       expect(addUpdateListenerCallback).toHaveBeenCalledTimes(1);
       expect(updateCallback).toHaveBeenCalledTimes(2);
-      expect(writeFileCallback).toHaveBeenCalledWith(Extension.configFile, JSON.stringify(newSettingFile), expect.anything());
+      expect(writeFileCallback).toHaveBeenCalledWith(MockExtension.configFile, JSON.stringify(newSettingFile), expect.anything());
       expect(settings.getValue('mock_setting1')).toEqual(!MockSettingValues.mock_setting1);
     });
   });
