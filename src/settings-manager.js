@@ -44,11 +44,12 @@ module.exports = function (
 
     logger.verbose(`Writing settings to ${configFile}...`);
 
-
-    fs.writeFile(configFile, JSON.stringify({
+    const fileContent = {
       version: configVersion,
       settings: filterDefaultValues(settings, definitions),
-    }), err => {
+    };
+
+    fs.writeFile(configFile, JSON.stringify(fileContent, null, 2), err => {
       if (err) {
         logger.error(`Failed to save settings to ${configFile}: ${err}`);
       }

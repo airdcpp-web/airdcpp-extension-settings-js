@@ -150,7 +150,7 @@ describe('settings', () => {
       expect(updateListener).toBeDefined();
       expect(addUpdateListenerCallback).toHaveBeenCalledTimes(1);
       expect(updateValuesCallback).toHaveBeenCalledTimes(2);
-      expect(writeFileCallback).toHaveBeenCalledWith(MockExtension.configFile, JSON.stringify(newSettingFile), expect.anything());
+      expect(writeFileCallback).toHaveBeenCalledWith(MockExtension.configFile, JSON.stringify(newSettingFile, null, 2), expect.anything());
       expect(settings.getValue('mock_setting1')).toEqual(!MockSettingValues.mock_setting1);
       expect(settings.getValue('mock_setting2')).toEqual(MockSettingFile.settings.mock_setting2);
       expect(settings.getValue('mock_setting3')).toEqual(MockSettingValues.mock_setting3);
