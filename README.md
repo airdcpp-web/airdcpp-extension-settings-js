@@ -1,4 +1,4 @@
-# airdcpp-extension-settings-js [![Travis][build-badge]][build] [![npm package][npm-badge]][npm]
+# airdcpp-extension-settings-js [![Travis][build-badge]][build] [![npm package][npm-badge]][npm] [![Coverage][coverage-badge]][coverage]
 
 Settings management module for AirDC++ JavaScript extensions.
 
@@ -137,8 +137,12 @@ settings.onValuesUpdated = updatedValues => {
 };
 ```
 
-[build-badge]: https://img.shields.io/travis/airdcpp-web/airdcpp-extension-settings-js/master.svg?style=flat-square
-[build]: https://travis-ci.org/airdcpp-web/airdcpp-extension-settings-js
+
+[build-badge]: https://github.com/airdcpp-web/airdcpp-extension-settings-js/actions/workflows/node.js.yml/badge.svg
+[build]: https://github.com/airdcpp-web/airdcpp-extension-settings-js/actions/workflows/node.js.yml
 
 [npm-badge]: https://img.shields.io/npm/v/airdcpp-extension-settings.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/airdcpp-extension-settings
+
+[coverage-badge]: https://codecov.io/gh/airdcpp-web/airdcpp-extension-settings-js/branch/master/graph/badge.svg
+[coverage]: https://codecov.io/gh/airdcpp-web/airdcpp-extension-settings-js
