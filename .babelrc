@@ -2,15 +2,10 @@
   "presets": [ 
     ["@babel/env", {
       "targets": {
-        "node": "0.10"
+        "node": "10.0"
       }
     }]
   ],
-  "plugins": [
-    "@babel/plugin-transform-async-to-generator",
-    ["@babel/plugin-transform-runtime", {
-      "regenerator": true
-    }]
-  ],
+  "plugins": [],
   "sourceType": "unambiguous"
 }
