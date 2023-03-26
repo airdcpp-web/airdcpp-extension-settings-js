@@ -1,4 +1,4 @@
-# airdcpp-extension-settings-js [![Travis][build-badge]][build] [![npm package][npm-badge]][npm] [![Coverage][coverage-badge]][coverage]
+# airdcpp-extension-settings-js [![Node.js CI][build-badge]][build] [![npm package][npm-badge]][npm] [![Coverage][coverage-badge]][coverage]
 
 Settings management module for AirDC++ JavaScript extensions.
 
