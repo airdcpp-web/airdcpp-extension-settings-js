@@ -17,7 +17,7 @@ const DefaultAPIHandler = (socket, extensionName) => ({
   },
 });
 
-module.exports = function (
+module.exports = function index (
   socket, 
   extension
 ) {
@@ -27,6 +27,6 @@ module.exports = function (
 
   const API = DefaultAPIHandler(socket, extensionName);
   
-  const manager = settingsManager(extension, socket.logger, require('fs'), API);
+  const manager = settingsManager(extension, socket.logger, require('node:fs'), API);
   return manager;
 };

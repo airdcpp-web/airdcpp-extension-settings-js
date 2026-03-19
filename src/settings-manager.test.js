@@ -111,7 +111,7 @@ describe('settings', () => {
       let updateListener;
 
       const updateValuesCallback = jest.fn((settings) => {
-        if (!!updateListener) {
+        if (updateListener) {
           // Simulate API listener event for the updated values
           updateListener(settings);
         }

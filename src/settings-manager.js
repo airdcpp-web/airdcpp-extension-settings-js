@@ -20,7 +20,7 @@ const filterDefaultValues = (settingValueMap, definitions) => {
   return nonDefaultValues;
 }
 
-module.exports = function (
+module.exports = function settingsManager (
   extension,
   logger,
   fs,
@@ -57,7 +57,7 @@ module.exports = function (
   };
 
   const hasDefinition = key => {
-    return !!definitions.find(def => def.key === key);
+    return definitions.some(def => def.key === key);
   };
 
   // Get setting value by key
@@ -109,7 +109,7 @@ module.exports = function (
 
       const data = JSON.parse(fs.readFileSync(configFile, 'utf8'));
       if (data && (!data.version || !data.settings)) {
-        throw 'Invalid settings format';
+        throw new Error('Invalid settings format');
       }
 
       if (data.version !== configVersion && convertHandler) {
