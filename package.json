@@ -18,20 +18,20 @@
     "airdcpp-extensions"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.18.3",
+    "@babel/runtime": "^8.0.5",
     "invariant": "^2.2.4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.5",
-    "@babel/plugin-transform-runtime": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
+    "@babel/cli": "^8.0.5",
+    "@babel/core": "^8.0.5",
+    "@babel/plugin-transform-runtime": "^8.0.1",
+    "@babel/preset-env": "^8.0.5",
     "cross-env": "^10.0.0",
     "eslint": "^10.0.3",
     "eslint-plugin-jest": "^29.0.1",
     "jest": "^30.0.5",
     "jest-cli": "^30.0.5",
-    "pre-commit": "^1.2.2",
+    "pre-commit": "^2.0.0",
     "rimraf": "^6.0.1"
   },
   "pre-commit": [
